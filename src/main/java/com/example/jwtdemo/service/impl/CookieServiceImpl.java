@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CookieServiceImpl implements CookieService {
 
-    private final UserTokenRepository userTokenRepository;
-
     @Value("${security.http.cookies.token}")
     private String COOKIE_NAME;
     @Override
