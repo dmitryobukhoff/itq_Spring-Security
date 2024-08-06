@@ -1,5 +1,6 @@
 package com.example.jwtdemo.config;
 
+import com.example.jwtdemo.filter.UserTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ public class SecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UserTokenFilter userTokenFilter;
 
 
     @Bean
@@ -31,6 +33,7 @@ public class SecurityConfig {
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(userTokenFilter, JwtAuthenticationFilter.class)
                 .build();
     }
 

@@ -6,8 +6,12 @@ import com.example.jwtdemo.model.dto.request.UserRegistrationRequest;
 import com.example.jwtdemo.model.dto.response.UserAuthenticationResponse;
 import com.example.jwtdemo.model.dto.response.UserRegistrationResponse;
 import com.example.jwtdemo.repository.UserRepository;
+import com.example.jwtdemo.repository.UserTokenRepository;
 import com.example.jwtdemo.service.AuthenticationService;
+import com.example.jwtdemo.service.CookieService;
 import com.example.jwtdemo.service.JwtService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
+    private final UserTokenRepository userTokenRepository; // Нужна помощь!
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -32,7 +37,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
         userRepository.save(user);
         final String token = jwtService.generateToken(user);
+        userTokenRepository.putToken(user.getEmail(), token); // Нужна помощь!
         return UserRegistrationResponse.builder()
+                .username(user.getEmail())
                 .token(token)
                 .build();
     }
@@ -48,8 +55,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
         final String token = jwtService.generateToken(user);
+        userTokenRepository.putToken(user.getEmail(), token); // Нужна помощь!
         return UserAuthenticationResponse.builder()
+                .username(user.getEmail())
                 .token(token)
                 .build();
     }
+
+
 }

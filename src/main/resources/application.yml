@@ -21,10 +21,13 @@ security:
     jwt:
         secret-key: o9354rn9mm94kmd93d903kj209kksdfkmlsdfkmsdf9341924124
         expiration-time: 3600000
+    http:
+        cookies:
+            token: redis_user_id
 
 logging:
     level:
-      org.springframework.security: trace
+      org.springframework.security: debug
 
 server:
     port: 8082
